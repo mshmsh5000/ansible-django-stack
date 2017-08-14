@@ -4,7 +4,7 @@ ansible-django-stack
 
 [![Build Status](https://travis-ci.org/jcalazan/ansible-django-stack.svg?branch=master)](https://travis-ci.org/jcalazan/ansible-django-stack)
 
-Ansible Playbook designed for environments running a Django app.  It can install and configure these applications that are commonly used in production Django deployments:
+Ansible Playbook designed for environments running a Django app, and customized for the WeVote API server.  It can install and configure these applications that are commonly used in production Django deployments:
 
 - Nginx
 - Gunicorn
@@ -12,12 +12,12 @@ Ansible Playbook designed for environments running a Django app.  It can install
 - Supervisor
 - Virtualenv
 - Memcached
-- Celery
-- RabbitMQ
+- (Celery -- not used here)
+- (RabbitMQ -- not used here)
 
 Default settings are stored in ```roles/role_name/defaults/main.yml```.  Environment-specific settings are in the ```env_vars``` directory.
 
-A `certbot` role is also included for automatically generating and renewing trusted SSL certificates with [Let's Encrypt](https://letsencrypt.org/). 
+A `certbot` role is also included for automatically generating and renewing trusted SSL certificates with [Let's Encrypt](https://letsencrypt.org/).
 
 **Tested with OS:** Ubuntu 16.04 LTS (64-bit PC), Ubuntu 14.04 LTS (64-bit PC)
 
@@ -263,7 +263,7 @@ A `certbot` role has been added to automatically install the `certbot` client an
 - A DNS "A" or "CNAME" record must exist for the host to issue the certificate to.
 - The `--standalone` option is being used, so port 80 or 443 must not be in use (the playbook will automatically check if Nginx is installed and will stop and start the service automatically).
 
-In `roles/nginx/defaults.main.yml`, you're going to want to override the `nginx_use_letsencrypt` variable and set it to yes/true to reference the Let's Encrypt certificate and key in the Nginx template. 
+In `roles/nginx/defaults.main.yml`, you're going to want to override the `nginx_use_letsencrypt` variable and set it to yes/true to reference the Let's Encrypt certificate and key in the Nginx template.
 
 In `roles/certbot/defaults/main.yml`, you may want to override the `certbot_admin_email` variable.
 
