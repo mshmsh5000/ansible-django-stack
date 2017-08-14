@@ -7,20 +7,20 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/xenial64"
 
-  config.vm.define "my-cool-app.local", primary: true do |app|
-    app.vm.hostname = "my-cool-app"
+  config.vm.define "wevoteapi.local", primary: true do |app|
+    app.vm.hostname = "wevoteapi"
 
     app.vm.network "private_network", type: "dhcp"
   end
 
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--name", "MyCoolApp", "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--name", "WeVoteAPI", "--memory", "2048"]
   end
 
   config.vm.provider "docker" do |d, override|
     override.vm.box = nil
 
-    d.name = "MyCoolApp"
+    d.name = "wevoteapi"
     d.build_dir = "docker"
     d.create_args = ["--publish-all", "--security-opt=seccomp:unconfined",
                      "--tmpfs=/run", "--tmpfs=/run/lock", "--tmpfs=/tmp",
@@ -39,5 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "vagrant.yml"
     ansible.host_key_checking = false
     ansible.verbose = "vv"
+    #
+    # ansible.ask_vault_pass = true
   end
 end
