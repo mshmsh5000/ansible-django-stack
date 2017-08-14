@@ -1,0 +1,60 @@
+---
+
+- name: Deal with WeVoteServer configuration
+  pip: virtualenv={{ virtualenv_path }} requirements={{ requirements_file }}
+
+- name: Copy environment variables template
+  command: cp {{ project_path }}/config/environment_variables-template.json {{ project_path }}/config/environment_variables.json
+
+- name: Create logging directory
+  file:
+    path=/var/log/wevote
+    state=directory
+    owner=wevoteserver
+    group=webapps
+
+- name: Configure URL (Should be Jinja-ized!)
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='api\.wevoteusa\.org'
+    replace='wevoteapi.local'
+
+- name: Configure Django secret key
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='REALLYANYTHINGYOUWANT'
+    replace='{{ django_secret_key }}'
+    backup=no
+
+- name: Configure Postgresql DB name
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='"WeVoteServerDB"'
+    replace='"{{ db_user }}"'
+    backup=no
+
+- name: Configure Postgresql user
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='"postgres"'
+    replace='"{{ db_user }}"'
+    backup=no
+
+- name: Configure Postgresql pass, which is "{{ password }}"
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='("DATABASE_PASSWORD":)              ""'
+    replace='\1              "{{ db_password }}"'
+    backup=no
+
+- name: Configure Postgresql host to local loopback
+  replace:
+    dest={{ project_path }}/config/environment_variables.json
+    regexp='("DATABASE_HOST":)                  ""'
+    replace='\1              "127.0.0.1"'
+    backup=no
+
+- name: Copy 500.html into place
+  template: src=500.html
+            dest={{ project_path }}/templates/500.html
+            mode=0664
