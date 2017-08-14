@@ -15,7 +15,7 @@
     - base
     - avahi
     - db
-    - rabbitmq
     - web
-    - celery
     - nginx
+  #  - rabbitmq
+  #  - celery
