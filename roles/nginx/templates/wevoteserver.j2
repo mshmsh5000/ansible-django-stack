@@ -36,7 +36,7 @@ server {
     error_log {{ nginx_error_log_file }};
 
     location /static/apis_v1/ {
-        alias   {{ project_path }}/apis_v1;
+        alias   {{ project_path }}/apis_v1/static/apis_v1/;
     }
 
     location /media/ {
