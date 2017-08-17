@@ -1,0 +1,5 @@
+---
+
+# Application settings.
+virtualenv_path: "/webapps/{{ application_name }}"
+project_path: "{{ virtualenv_path }}/{{ project_name }}"
