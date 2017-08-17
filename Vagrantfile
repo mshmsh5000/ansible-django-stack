@@ -38,11 +38,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../WeVoteServer", "/webapps/wevoteserver/WeVoteServer"
 
   # Ansible provisioner.
+  #
+  # NOTE: To access sensitive variables, you must
+  #   1. Store your Ansible Vault password in `.ansible_vault_pass` in this dir
+  #   2. Uncomment the `vault_password_file` line below
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "vagrant.yml"
     ansible.host_key_checking = false
     ansible.verbose = "vv"
-    #
-    # ansible.ask_vault_pass = true
+    # ansible.vault_password_file = "./.ansible_vault_pass"
   end
 end
