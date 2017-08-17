@@ -10,8 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "wevoteapi.local", primary: true do |app|
     app.vm.hostname = "wevoteapi"
 
-    app.vm.network "private_network", type: "dhcp"
+    # app.vm.network "private_network", type: "dhcp"
   end
+
+  config.vm.network :forwarded_port, guest: 80, host: 8888
+  config.vm.network :forwarded_port, guest: 443, host: 8889
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--name", "WeVoteAPI", "--memory", "2048"]
@@ -32,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # a folder in the host machine containing your local git repo to be synced to
   # the guest machine. Ensure the Ansible playbook variable "setup_git_repo" is
   # set to "no" (in env_vars/vagrant.yml) when enabling this.
-  #config.vm.synced_folder "../../../my-cool-app", "/webapps/mycoolapp/my-cool-app"
+  config.vm.synced_folder "../WeVoteServer", "/webapps/wevoteserver/WeVoteServer"
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
