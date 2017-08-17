@@ -12,8 +12,8 @@ Ansible Playbook designed for environments running a Django app, and customized 
 - Supervisor
 - Virtualenv
 - Memcached
-- (Celery -- not used here)
-- (RabbitMQ -- not used here)
+- (Celery -- disabled for We Vote)
+- (RabbitMQ -- disabled for We Vote)
 
 Default settings are stored in ```roles/role_name/defaults/main.yml```.  Environment-specific settings are in the ```env_vars``` directory.
 
@@ -23,9 +23,21 @@ A `certbot` role is also included for automatically generating and renewing trus
 
 **Tested with Cloud Providers:** [Digital Ocean](https://www.digitalocean.com/?refcode=5aa134a379d7), [Amazon](https://aws.amazon.com), [Rackspace](http://www.rackspace.com/)
 
-## Getting Started
+## Getting started
 
 A quick way to get started is with Vagrant.
+
+## Vagrant quick start: Mac
+
+- Have [Homebrew](https://brew.sh/) installed
+- `git clone [ DJANGO REPO URL ]`
+- `git clone [ THIS REPO URL ]`
+- `brew update && brew install ansible`
+- `cd [ DJANGO REPO ]`
+- `vagrant up`
+- _...Make coffee_
+- Navigate to `https://localhost:8889/` and bypass cert warning
+- Proceed with [WeVoteServer setup instructions](https://github.com/wevote/WeVoteServer/blob/develop/docs/README_API_INSTALL_SETUP_ENVIRONMENT.md)
 
 ### Requirements
 
