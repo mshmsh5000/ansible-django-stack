@@ -4,7 +4,7 @@
   pip: virtualenv={{ virtualenv_path }} requirements={{ requirements_file }}
 
 - name: Create environment variables template
-  template: src=environment_variables.json
+  template: src=environment_variables-template.json
             dest={{ project_path }}/config/environment_variables.json
             mode=0664
 
