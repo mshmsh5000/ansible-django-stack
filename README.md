@@ -35,8 +35,8 @@ A quick way to get started is with Vagrant.
 - `brew update && brew install ansible`
 - `cd [ DJANGO REPO ]`
 - `vagrant up`
-- _...Make coffee_
-- Navigate to [https://localhost:8889/](https://localhost:8889/) and bypass cert warning
+- _...Drink your coffee..._
+- Navigate to https://localhost:8889/ and bypass cert warning
 - Proceed with [WeVoteServer setup instructions](https://github.com/wevote/WeVoteServer/blob/develop/docs/README_API_INSTALL_SETUP_ENVIRONMENT.md)
 
 ### Requirements
@@ -52,42 +52,6 @@ sudo add-apt-repository ppa:ansible/ansible
 sudo apt-get update
 ```
 
-### Configuring your application
-
-The main settings to change are in the [env_vars/base.yml](env_vars/base.yml) file, where you can configure the location of your Git project, the project name, and the application name which will be used throughout the Ansible configuration. I set some default values based on my open-source app, [YouTube Audio Downloader](https://github.com/jcalazan/youtube-audio-dl).
-
-Note that the default values in the playbooks assume that your project structure looks something like this:
-
-```
-myproject
-├── manage.py
-├── myapp
-│   ├── apps
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── settings
-│   │   ├── base.py
-│   │   ├── __init__.py
-│   │   ├── local.py
-│   │   └── production.py
-│   ├── templates
-│   │   ├── 403.html
-│   │   ├── 404.html
-│   │   ├── 500.html
-│   │   └── base.html
-│   ├── urls.py
-│   └── wsgi.py
-├── README.md
-└── requirements.txt
-```
-
-The main things to note are the locations of the `manage.py` and `wsgi.py` files.  If your project's structure is a little different, you may need to change the values in these 2 files:
-
-- `roles/web/tasks/setup_django_app.yml`
-- `roles/web/templates/gunicorn_start.j2`
-
-Also, if your app needs additional system packages installed, you can add them in `roles/web/tasks/install_additional_packages.yml`.
-
 ### Creating the machine
 
 Type this command from the project root directory:
@@ -98,9 +62,28 @@ vagrant up
 
 (To use Docker instead of VirtualBox, add the flag ```--provider=docker``` to the command above. Note that extra configuration may be required first on your host for Docker to run systemd in a container.)
 
-Wait a few minutes for the magic to happen.  Access the app by going to this URL: https://my-cool-app.local
+Wait a few minutes for the magic to happen.  Access the app by going to this URL: https://localhost:8889/
 
-Yup, exactly, you just provisioned a completely new server and deployed an entire Django stack in 5 minutes with _two words_ :).
+### Ansible Vault
+
+All protected We Vote settings are stored in `env_vars/wevote-private.yml` and
+encrypting using [Ansible Vault](https://docs.ansible.com/ansible/latest/playbooks_vault.html#vault).
+
+To use the private settings file:
+
+- Get the Ansible Vault pass from a team member
+- In the top-level directory of this repo, `echo [ANSIBLE VAULT PASS] > .ansible_vault_pass`
+- In the top-level file `vagrant.yml`, uncomment this line: `# - env_vars/wevote-private.yml`
+- In Vagrantfile, uncomment this line near the end: `# ansible.vault_password_file = "./.ansible_vault_pass"`
+- Rerun `vagrant provision`
+
+### New Relic
+
+To install New Relic:
+
+- Follow the "Ansible Vault" instructions, above
+- In the top-level file `vagrant.yml`, uncomment this line: `# - newrelic`
+- Rerun `vagrant provision`
 
 ### Additional vagrant commands
 
@@ -130,7 +113,7 @@ vagrant halt
 
 ## Security
 
-*NOTE: Do not run the Security role without understanding what it does. Improper configuration could lock you out of your machine.*
+*NOTE: NOT TESTED WITH WE VOTE. Do not run the Security role without understanding what it does. Improper configuration could lock you out of your machine.*
 
 **Security role tasks**
 
