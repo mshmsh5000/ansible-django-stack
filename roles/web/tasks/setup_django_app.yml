@@ -13,12 +13,22 @@
   when: run_django_syncdb is defined and run_django_syncdb
   tags: django.syncdb
 
+- name: Make Django database migrations
+  django_manage:
+    command: makemigrations
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: ""
+  environment: "{{ django_environment }}"
+  when: run_django_db_migrations is defined and run_django_db_migrations
+  tags: django.migrate
+
 - name: Run Django database migrations
   django_manage:
     command: migrate
     app_path: "{{ project_path }}"
     virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
+    settings: ""
   environment: "{{ django_environment }}"
   when: run_django_db_migrations is defined and run_django_db_migrations
   tags: django.migrate
@@ -28,7 +38,7 @@
     command: collectstatic
     app_path: "{{ project_path }}"
     virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
+    settings: ""
   environment: "{{ django_environment }}"
   when: run_django_collectstatic is defined and run_django_collectstatic
   notify: restart application

@@ -11,6 +11,9 @@
 - include: setup_git_repo.yml
   tags: deploy
 
+- include: setup_wevote.yml
+  tags: deploy
+
 - include: setup_django_app.yml
   tags: deploy
 

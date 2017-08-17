@@ -4,7 +4,7 @@ ansible-django-stack
 
 [![Build Status](https://travis-ci.org/jcalazan/ansible-django-stack.svg?branch=master)](https://travis-ci.org/jcalazan/ansible-django-stack)
 
-Ansible Playbook designed for environments running a Django app.  It can install and configure these applications that are commonly used in production Django deployments:
+Ansible Playbook designed for environments running a Django app, and customized for the WeVote API server.  It can install and configure these applications that are commonly used in production Django deployments:
 
 - Nginx
 - Gunicorn
@@ -12,20 +12,32 @@ Ansible Playbook designed for environments running a Django app.  It can install
 - Supervisor
 - Virtualenv
 - Memcached
-- Celery
-- RabbitMQ
+- (Celery -- disabled for We Vote)
+- (RabbitMQ -- disabled for We Vote)
 
 Default settings are stored in ```roles/role_name/defaults/main.yml```.  Environment-specific settings are in the ```env_vars``` directory.
 
-A `certbot` role is also included for automatically generating and renewing trusted SSL certificates with [Let's Encrypt](https://letsencrypt.org/). 
+A `certbot` role is also included for automatically generating and renewing trusted SSL certificates with [Let's Encrypt](https://letsencrypt.org/).
 
 **Tested with OS:** Ubuntu 16.04 LTS (64-bit PC), Ubuntu 14.04 LTS (64-bit PC)
 
 **Tested with Cloud Providers:** [Digital Ocean](https://www.digitalocean.com/?refcode=5aa134a379d7), [Amazon](https://aws.amazon.com), [Rackspace](http://www.rackspace.com/)
 
-## Getting Started
+## Getting started
 
 A quick way to get started is with Vagrant.
+
+## Vagrant quick start: Mac
+
+- Have [Homebrew](https://brew.sh/) installed
+- `git clone [ DJANGO REPO URL ]`
+- `git clone [ THIS REPO URL ]`
+- `brew update && brew install ansible`
+- `cd [ DJANGO REPO ]`
+- `vagrant up`
+- _...Drink your coffee..._
+- Navigate to https://localhost:8889/ and bypass cert warning
+- Proceed with [WeVoteServer setup instructions](https://github.com/wevote/WeVoteServer/blob/develop/docs/README_API_INSTALL_SETUP_ENVIRONMENT.md)
 
 ### Requirements
 
@@ -40,42 +52,6 @@ sudo add-apt-repository ppa:ansible/ansible
 sudo apt-get update
 ```
 
-### Configuring your application
-
-The main settings to change are in the [env_vars/base.yml](env_vars/base.yml) file, where you can configure the location of your Git project, the project name, and the application name which will be used throughout the Ansible configuration. I set some default values based on my open-source app, [YouTube Audio Downloader](https://github.com/jcalazan/youtube-audio-dl).
-
-Note that the default values in the playbooks assume that your project structure looks something like this:
-
-```
-myproject
-├── manage.py
-├── myapp
-│   ├── apps
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── settings
-│   │   ├── base.py
-│   │   ├── __init__.py
-│   │   ├── local.py
-│   │   └── production.py
-│   ├── templates
-│   │   ├── 403.html
-│   │   ├── 404.html
-│   │   ├── 500.html
-│   │   └── base.html
-│   ├── urls.py
-│   └── wsgi.py
-├── README.md
-└── requirements.txt
-```
-
-The main things to note are the locations of the `manage.py` and `wsgi.py` files.  If your project's structure is a little different, you may need to change the values in these 2 files:
-
-- `roles/web/tasks/setup_django_app.yml`
-- `roles/web/templates/gunicorn_start.j2`
-
-Also, if your app needs additional system packages installed, you can add them in `roles/web/tasks/install_additional_packages.yml`.
-
 ### Creating the machine
 
 Type this command from the project root directory:
@@ -86,9 +62,28 @@ vagrant up
 
 (To use Docker instead of VirtualBox, add the flag ```--provider=docker``` to the command above. Note that extra configuration may be required first on your host for Docker to run systemd in a container.)
 
-Wait a few minutes for the magic to happen.  Access the app by going to this URL: https://my-cool-app.local
+Wait a few minutes for the magic to happen.  Access the app by going to this URL: https://localhost:8889/
 
-Yup, exactly, you just provisioned a completely new server and deployed an entire Django stack in 5 minutes with _two words_ :).
+### Ansible Vault
+
+All protected We Vote settings are stored in `env_vars/wevote-private.yml` and
+encrypting using [Ansible Vault](https://docs.ansible.com/ansible/latest/playbooks_vault.html#vault).
+
+To use the private settings file:
+
+- Get the Ansible Vault pass from a team member
+- In the top-level directory of this repo, `echo [ANSIBLE VAULT PASS] > .ansible_vault_pass`
+- In the top-level file `vagrant.yml`, uncomment this line: `# - env_vars/wevote-private.yml`
+- In Vagrantfile, uncomment this line near the end: `# ansible.vault_password_file = "./.ansible_vault_pass"`
+- Rerun `vagrant provision`
+
+### New Relic
+
+To install New Relic:
+
+- Follow the "Ansible Vault" instructions, above
+- In the top-level file `vagrant.yml`, uncomment this line: `# - newrelic`
+- Rerun `vagrant provision`
 
 ### Additional vagrant commands
 
@@ -118,7 +113,7 @@ vagrant halt
 
 ## Security
 
-*NOTE: Do not run the Security role without understanding what it does. Improper configuration could lock you out of your machine.*
+*NOTE: NOT TESTED WITH WE VOTE. Do not run the Security role without understanding what it does. Improper configuration could lock you out of your machine.*
 
 **Security role tasks**
 
@@ -263,7 +258,7 @@ A `certbot` role has been added to automatically install the `certbot` client an
 - A DNS "A" or "CNAME" record must exist for the host to issue the certificate to.
 - The `--standalone` option is being used, so port 80 or 443 must not be in use (the playbook will automatically check if Nginx is installed and will stop and start the service automatically).
 
-In `roles/nginx/defaults.main.yml`, you're going to want to override the `nginx_use_letsencrypt` variable and set it to yes/true to reference the Let's Encrypt certificate and key in the Nginx template. 
+In `roles/nginx/defaults.main.yml`, you're going to want to override the `nginx_use_letsencrypt` variable and set it to yes/true to reference the Let's Encrypt certificate and key in the Nginx template.
 
 In `roles/certbot/defaults/main.yml`, you may want to override the `certbot_admin_email` variable.
 

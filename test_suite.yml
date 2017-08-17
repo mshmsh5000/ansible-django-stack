@@ -17,7 +17,7 @@
     - security
     - base
     - db
-    - rabbitmq
+#    - rabbitmq
     - web
-    - celery
+#    - celery
     - nginx

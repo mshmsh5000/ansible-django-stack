@@ -36,11 +36,13 @@
 - name: Ensure user has access to the database
   become: yes
   become_user: postgres
-  postgresql_user: db={{ db_name }}
-                   name={{ db_user }}
-                   password={{ db_password }}
-                   priv=ALL
-                   state=present
+  postgresql_user:
+    db: "{{ db_name }}"
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    priv: ALL
+    role_attr_flags: LOGIN
+    state: present
 
 - name: Ensure user does not have unnecessary privileges
   become: yes
