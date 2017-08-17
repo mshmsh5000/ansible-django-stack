@@ -1,7 +1,7 @@
 ---
 
 # Git settings.
-setup_git_repo: yes
+setup_git_repo: no
 git_branch: develop
 
 
