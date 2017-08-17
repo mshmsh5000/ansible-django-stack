@@ -3,8 +3,10 @@
 - name: Deal with WeVoteServer configuration
   pip: virtualenv={{ virtualenv_path }} requirements={{ requirements_file }}
 
-- name: Copy environment variables template
-  command: cp {{ project_path }}/config/environment_variables-template.json {{ project_path }}/config/environment_variables.json
+- name: Create environment variables template
+  template: src=environment_variables.json
+            dest={{ project_path }}/config/environment_variables.json
+            mode=0664
 
 - name: Create logging directory
   file:
@@ -13,18 +15,18 @@
     owner=wevoteserver
     group=webapps
 
-- name: Configure URL (Should be Jinja-ized!)
-  replace:
-    dest={{ project_path }}/config/environment_variables.json
-    regexp='api\.wevoteusa\.org'
-    replace='wevoteapi.local'
-
-- name: Configure Django secret key
-  replace:
-    dest={{ project_path }}/config/environment_variables.json
-    regexp='REALLYANYTHINGYOUWANT'
-    replace='{{ django_secret_key }}'
-    backup=no
+# - name: Configure URL (Should be Jinja-ized!)
+#   replace:
+#     dest={{ project_path }}/config/environment_variables.json
+#     regexp='api\.wevoteusa\.org'
+#     replace='wevoteapi.local'
+#
+# - name: Configure Django secret key
+#   replace:
+#     dest={{ project_path }}/config/environment_variables.json
+#     regexp='REALLYANYTHINGYOUWANT'
+#     replace='{{ django_secret_key }}'
+#     backup=no
 
 - name: Configure Postgresql DB name
   replace:
