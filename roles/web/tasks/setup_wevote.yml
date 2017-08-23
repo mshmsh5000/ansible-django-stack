@@ -60,3 +60,33 @@
   template: src=500.html
             dest={{ project_path }}/templates/500.html
             mode=0664
+
+- name: Add the MaxMind (GeoIP) PPA repository to the apt sources list
+  apt_repository: repo='ppa:maxmind/ppa'
+                  update_cache=true
+                  state=present
+
+- name: Install libgeoip1
+  apt:
+    name: libgeoip1
+    state: present
+
+- name: Install libgeoip-dev
+  apt:
+    name: libgeoip-dev
+    state: present
+
+- name: Install geoip-bin
+  apt:
+    name: geoip-bin
+    state: present
+
+- name: Run GeoIP data import
+  django_manage:
+    command: update_geoip_data
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: ""
+  environment: "{{ django_environment }}"
+  when: run_django_updategeoip is defined and run_django_updategeoip
+  tags: django.geoip
