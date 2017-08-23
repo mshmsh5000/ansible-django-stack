@@ -66,11 +66,6 @@
                   update_cache=true
                   state=present
 
-- name: Install autoconf package
-  apt:
-    name: autoconf
-    state: present
-
 - name: Install libgeoip1
   apt:
     name: libgeoip1
