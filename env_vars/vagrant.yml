@@ -51,6 +51,7 @@ requirements_file: "{{ project_path }}/requirements.txt"
 
 run_django_db_migrations: yes
 run_django_collectstatic: yes
+run_django_updategeoip: yes
 
 
 # Nginx settings.
