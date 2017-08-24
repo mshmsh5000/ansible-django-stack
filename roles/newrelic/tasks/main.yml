@@ -1,36 +1,15 @@
 ---
-- name: Add New Relic Repository
-  apt_repository:
-    repo: deb http://apt.newrelic.com/debian/ newrelic non-free
-    state: present
-
-- name: Add New Relic Signing Key
-  apt_key:
-    url: https://download.newrelic.com/548C16BF.gpg
-    state: present
-
-- name: Update Repositories
-  apt:
-    name: newrelic-sysmond
-    update_cache: yes
-    state: present
-
-- name: Add New Relic Config
-  template:
-    src: nrsysmond.cfg.j2
-    dest: /etc/newrelic/nrsysmond.cfg
-    owner: newrelic
-    group: newrelic
-
-- name: Restart New Relic
-  service:
-    name: newrelic-sysmond
-    state: restarted
 
 - name: Install New Relic Python agent
   pip:
     name: newrelic
   tags: newrelic
+
+- name: Ensure local /etc exists
+  file:
+    state: directory
+    path: /webapps/{{ application_name }}/etc
+    mode: 0755
 
 - name: Generate New Relic APM config
   template: src=newrelic.ini.j2
@@ -41,6 +20,9 @@
   replace:
     dest={{ virtualenv_path }}/bin/gunicorn_start
     regexp='exec gunicorn'
-    replace='NEW_RELIC_CONFIG_FILE=/webapps/{{ application_name }}/etc/newrelic.ini exec newrelic-admin run-program gunicorn'
+    replace='NEW_RELIC_PROCESS_HOST_DISPLAY_NAME="{{ project_name }} (Dev)" NEW_RELIC_CONFIG_FILE=/webapps/{{ application_name }}/etc/newrelic.ini exec newrelic-admin run-program gunicorn'
     backup=yes
+
+- name: Re-read the Supervisor config files & restart Gunicorn
+  supervisorctl: name={{ application_name }} state=present
   notify: restart application

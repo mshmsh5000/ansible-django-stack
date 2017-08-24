@@ -1,7 +1,7 @@
 ---
 
 # To enable New Relic, make sure you've uncommented the `wevote-private.yml`
-# env vars and the `newrelic` role.
+# env vars and the two `newrelic` roles.
 #
 # Because the private env vars file is encrypted with Ansible Vault, you'll also
 # need to uncomment `ansible.ask_vault_pass = true` in the Vagrantfile.
@@ -25,5 +25,6 @@
     - web
     - nginx
     # - newrelic
+    # - { role: nrinfragent, nrinfragent_license_key: "{{ new_relic_key }}"  }
     # - rabbitmq
     # - celery
