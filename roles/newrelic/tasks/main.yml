@@ -1,8 +1,7 @@
 ---
 
 - name: Install New Relic Python agent
-  pip:
-    name: newrelic
+  pip: virtualenv={{ virtualenv_path }} name=newrelic
   tags: newrelic
 
 - name: Ensure local /etc exists
@@ -13,16 +12,14 @@
 
 - name: Generate New Relic APM config
   template: src=newrelic.ini.j2
-            dest=/webapps/{{ application_name }}/etc/newrelic.ini
+            dest={{ virtualenv_path }}/etc/newrelic.ini
             mode=0664
 
-- name: Update Gunicorn start script
-  replace:
-    dest={{ virtualenv_path }}/bin/gunicorn_start
-    regexp='exec gunicorn'
-    replace='NEW_RELIC_PROCESS_HOST_DISPLAY_NAME="{{ project_name }} (Dev)" NEW_RELIC_CONFIG_FILE=/webapps/{{ application_name }}/etc/newrelic.ini exec newrelic-admin run-program gunicorn'
-    backup=yes
-
-- name: Re-read the Supervisor config files & restart Gunicorn
-  supervisorctl: name={{ application_name }} state=present
+- name: Generate New Relic-enabled Gunicorn start script
+  template: src=gunicorn_start.j2
+            dest={{ virtualenv_path }}/bin/gunicorn_start
+            mode=0755
+            force=yes
+            owner=wevoteserver
+            group=webapps
   notify: restart application
