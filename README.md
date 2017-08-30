@@ -64,7 +64,9 @@ vagrant up
 
 Wait a few minutes for the magic to happen.  Access the app by going to this URL: https://localhost:8889/
 
-### Ansible Vault
+### OPTIONAL: Ansible Vault
+
+_N.b. You do not need these private vars decrypted to build a working server. Regardless of whether you use Vault in the future, skip this section for your first build, so you can make sure the rest of the build executes successfully._
 
 All protected We Vote settings are stored in `env_vars/wevote-private.yml` and
 encrypting using [Ansible Vault](https://docs.ansible.com/ansible/latest/playbooks_vault.html#vault).
