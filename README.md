@@ -79,12 +79,12 @@ To use the private settings file:
 - In Vagrantfile, uncomment this line near the end: `# ansible.vault_password_file = "./.ansible_vault_pass"`
 - Rerun `vagrant provision`
 
-### New Relic
+### OPTIONAL: New Relic
 
 To install New Relic:
 
 - Follow the "Ansible Vault" instructions, above
-- In the top-level file `vagrant.yml`, uncomment this line: `# - newrelic`
+- In the top-level file `vagrant.yml`, uncomment the `newrelic` and `nrinfragent` lines in the `roles` section
 - Rerun `vagrant provision`
 
 ### Additional vagrant commands
@@ -107,7 +107,7 @@ vagrant provision
 vagrant reload
 ```
 
-**Shutdown the box**
+**Shut down the box**
 
 ```
 vagrant halt
