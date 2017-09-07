@@ -2,6 +2,7 @@
   "_comment":                       "Note that WE_VOTE_SERVER_ROOT_URL should end without slash",
   "WE_VOTE_SERVER_ROOT_URL":        "https://api.wevoteusa.org",
   "WEB_APP_ROOT_URL":               "https://WeVote.US",
+  "TIME_ZONE":                      "US/Pacific",
   "SERVER_IN_DEBUG_MODE":           true,
 
   "_comment":                       "local.py settings, including database",
@@ -11,6 +12,22 @@
   "DATABASE_PASSWORD":              "",
   "DATABASE_HOST":                  "",
   "DATABASE_PORT":                  "",
+
+  "_comment":                       "read-only database settings for local.py",
+  "DATABASE_ENGINE_READONLY":       "django.db.backends.postgresql_psycopg2",
+  "DATABASE_NAME_READONLY":         "WeVoteServerDB",
+  "DATABASE_USER_READONLY":         "postgres",
+  "DATABASE_PASSWORD_READONLY":     "",
+  "DATABASE_HOST_READONLY":         "",
+  "DATABASE_PORT_READONLY":         "",
+
+  "_comment":                       "analytics database settings for local.py",
+  "DATABASE_ENGINE_ANALYTICS":      "django.db.backends.postgresql_psycopg2",
+  "DATABASE_NAME_ANALYTICS":        "WeVoteServerDB",
+  "DATABASE_USER_ANALYTICS":        "postgres",
+  "DATABASE_PASSWORD_ANALYTICS":    "",
+  "DATABASE_HOST_ANALYTICS":        "",
+  "DATABASE_PORT_ANALYTICS":        "",
 
   "_comment":                       "The connection string for Elastic Search database",
   "ELASTIC_SEARCH_CONNECTION_STRING": "",
