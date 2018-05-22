@@ -36,7 +36,7 @@ A quick way to get started is with Vagrant.
 - `cd [ DJANGO REPO ]`
 - `vagrant up`
 - _...Drink your coffee..._
-- Navigate to https://localhost:8889/ and bypass cert warning
+- Navigate to https://localhost:8889/ and bypass cert warning - please note that you will need to update the urls in your "WeVoteServer/config/environment_variables.json" file in the next step to use "https://localhost:8889" (https vs. http, and 8889 vs. 8000)
 - Proceed with [WeVoteServer setup instructions](https://github.com/wevote/WeVoteServer/blob/develop/docs/README_API_INSTALL_SETUP_ENVIRONMENT.md)
 
 ### Requirements
