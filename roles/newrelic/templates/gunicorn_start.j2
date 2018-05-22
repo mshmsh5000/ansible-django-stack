@@ -26,10 +26,12 @@ RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
 
 # New Relic environment vars
-NEW_RELIC_PROCESS_HOST_DISPLAY_NAME="{{ project_name }} (Dev)"
+NEW_RELIC_PROCESS_HOST_DISPLAY_NAME="{{ project_name }}-Sandbox"
 NEW_RELIC_CONFIG_FILE={{ virtualenv_path }}/etc/newrelic.ini
+NEW_RELIC_ENVIRONMENT=development
 export NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
 export NEW_RELIC_CONFIG_FILE
+export NEW_RELIC_ENVIRONMENT
 
 # Programs meant to be run under supervisor should not daemonize themselves
 # (do not use --daemon).

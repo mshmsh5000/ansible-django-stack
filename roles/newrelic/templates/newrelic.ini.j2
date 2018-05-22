@@ -191,8 +191,8 @@ thread_profiler.enabled = true
 #
 
 [newrelic:development]
-app_name = {{ project_name }} (Dev)
-monitor_mode = false
+app_name = {{ project_name }}-Sandbox
+monitor_mode = true
 transaction_tracer.record_sql = {{ new_relic_sql_mode }}
 
 [newrelic:test]
